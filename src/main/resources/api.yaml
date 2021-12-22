@@ -1,0 +1,282 @@
+swagger: '2.0'
+info:
+  title: SpeedHome REST APIs
+  version: 1.0.0
+  description: The document of SpeedHome Rest APIs
+  contact:
+    name: Hoàng NV
+    url: 'https://www.hoang.net'
+    email: hoang@swagger.io
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+host: 'localhost:8080'
+basePath: /speedhome/backend/v1
+#host: virtserver.swaggerhub.com
+#basePath: /hoang9xvn113/api/1.0.0
+
+paths:
+  /todos:
+    get:
+      tags:
+        - Todos
+      summary: getAllTodos
+      operationId: getAllTodos
+      produces:
+        - application/json
+      responses:
+        200:
+          $ref: '#/responses/Todos'
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/NoAuthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
+        429:
+          $ref: '#/responses/TooManyRequests'
+        500:
+          $ref: '#/responses/InternalServerError'
+    post:
+      tags:
+        - Todos
+      summary: addTodo
+      operationId: addTodo
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: request
+          description: 'Request'
+          schema:
+            $ref: '#/definitions/TodoRequest'
+      responses:
+        200:
+          $ref: '#/responses/Todo'
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/NoAuthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
+        405:
+          $ref: '#/responses/MethodNotAllowed'
+        429:
+          $ref: '#/responses/TooManyRequests'
+        500:
+          $ref: '#/responses/InternalServerError'
+
+  /todos/{todoId}:
+    parameters:
+      - $ref: '#/parameters/TodoId'
+    get:
+      tags:
+        - Todos
+      summary: getTodoById
+      operationId: getTodoById
+      produces:
+        - application/json
+      responses:
+        200:
+          $ref: '#/responses/Todo'
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/NoAuthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
+        405:
+          $ref: '#/responses/MethodNotAllowed'
+        429:
+          $ref: '#/responses/TooManyRequests'
+        500:
+          $ref: '#/responses/InternalServerError'
+    patch:
+      tags:
+        - Todos
+      summary: updateTodo
+      operationId: updateTodo
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/TodoRequest'
+      responses:
+        200:
+          $ref: '#/responses/Todo'
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/NoAuthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
+        405:
+          $ref: '#/responses/MethodNotAllowed'
+        429:
+          $ref: '#/responses/TooManyRequests'
+        500:
+          $ref: '#/responses/InternalServerError'
+    delete:
+      security:
+        - api_key: []
+      tags:
+        - Todos
+      summary: deleteTodo
+      operationId: deleteTodo
+      responses:
+        204:
+          $ref: '#/responses/NoContent'
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/NoAuthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
+        405:
+          $ref: '#/responses/MethodNotAllowed'
+        429:
+          $ref: '#/responses/TooManyRequests'
+        500:
+          $ref: '#/responses/InternalServerError'
+
+definitions:
+  Error:
+    type: object
+    properties:
+      code:
+        type: string
+        example: '400'
+      description:
+        type: string
+        example: 'Properties missing'
+      reasonCode:
+        type: string
+        example: 'Bad Request Exception'
+      seeAlso:
+        type: string
+        example: 'seeAlsoNotFoundUrl'
+  Todo:
+    type: object
+    properties:
+      id:
+        type: string
+        example: ade8b2a6-62d1-4808-8300-fcb438feb179
+      title:
+        type: string
+        example: Go to the shop
+      selected:
+        type: boolean
+        example: true
+    title: Todo Object
+  Todos:
+    type: array
+    items:
+      $ref: '#/definitions/Todo'
+    title: Todo List
+  TodoRequest:
+    type: object
+    required:
+      - title
+      - selected
+    properties:
+      title:
+        type: string
+        example: Go to the shop
+      selected:
+        type: boolean
+        example: true
+    title: Todo Request
+
+
+
+responses:
+  Todo:
+    description: 'Todo Response'
+    schema:
+      $ref: '#/definitions/Todo'
+  Todos:
+    description: 'Todo List Response'
+    schema:
+      $ref: '#/definitions/Todos'
+
+  OK:
+    description: '200: OK'
+  Created:
+    description: '201: Created'
+  Accepted:
+    description: '202: Accepted'
+  NoContent:
+    description: '204: NoContent'
+  NotModified:
+    description: '304: Not Modified'
+  BadRequest:
+    description: '400: Bad Request'
+    schema:
+      $ref: '#/definitions/Error'
+  NoAuthorized:
+    description: '401: No Authorized'
+    schema:
+      $ref: '#/definitions/Error'
+  Forbidden:
+    description: '403: Forbidden'
+    schema:
+      $ref: '#/definitions/Error'
+  NotFound:
+    description: '404: Not Found'
+    schema:
+      $ref: '#/definitions/Error'
+  MethodNotAllowed:
+    description: '405: MethodNotAllowed'
+    schema:
+      $ref: '#/definitions/Error'
+  TooManyRequests:
+    description: '429: Too Many Requests'
+    schema:
+      $ref: '#/definitions/Error'
+  InternalServerError:
+    description: '500: Internal Server Error'
+    schema:
+      $ref: '#/definitions/Error'
+
+parameters:
+  Request-Context:
+    name: Request-Context
+    in: header
+    description: Request-Context
+    required: true
+    type: string
+  TodoId:
+    name: todoId
+    in: path
+    description: Todo Id
+    required: true
+    type: string
+  TodoRequest:
+    name: todoRequest
+    in: body
+    description: Todo Request
+    required: true
+    schema:
+      $ref: '#/definitions/TodoRequest'
+
+securityDefinitions:
+  api_key:
+    name: api_key
+    type: apiKey
+    in: header
+    description: key to use API
+schemes:
+  - https
